@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class Script_PlayerControl : MonoBehaviour
 {
-    public bool IsHost = true;
+    bool IsHost = true;
 
     float MoveSpeed = 50000.0f;
     float MaxSpeed = 8;
     Rigidbody rigi;
+
+    public void SetHost(bool host)
+    {
+        IsHost = host;
+    }
 
     void Start()
     {

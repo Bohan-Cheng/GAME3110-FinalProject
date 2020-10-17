@@ -18,12 +18,12 @@ public class Script_NetworkManager : MonoBehaviour
         if (host)
         {
             Cam1.SetActive(true);
-            Player1.AddComponent<Script_PlayerControl>().IsHost = host;
+            Player1.AddComponent<Script_PlayerControl>().SetHost(host);
         }
         else
         {
             Cam2.SetActive(true);
-            Player2.AddComponent<Script_PlayerControl>().IsHost = host;
+            Player2.AddComponent<Script_PlayerControl>().SetHost(host);
         }
     }
 
