@@ -6,8 +6,8 @@ public class Script_PlayerControl : MonoBehaviour
 {
     public bool IsHost = true;
 
-    float MoveSpeed = 5.0f;
-    float MaxSpeed = 10;
+    float MoveSpeed = 50000.0f;
+    float MaxSpeed = 8;
     Rigidbody rigi;
 
     void Start()
@@ -28,13 +28,13 @@ public class Script_PlayerControl : MonoBehaviour
         // Move the player
         float moveHorizontal = Input.GetAxis("Horizontal");
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, 0.0f);
-        rigi.AddForce(movement * MoveSpeed);
+        rigi.AddForce(movement * MoveSpeed * Time.deltaTime);
 
         // Limit max speed of the player
         rigi.velocity = Vector3.ClampMagnitude(rigi.velocity, MaxSpeed);
 
         // Slow stop the player
         if (moveHorizontal == 0)
-            rigi.velocity = Vector3.Lerp(rigi.velocity, Vector3.zero, 0.02f);
+            rigi.velocity = Vector3.Lerp(rigi.velocity, Vector3.zero, 20.0f * Time.deltaTime);
     }
 }
