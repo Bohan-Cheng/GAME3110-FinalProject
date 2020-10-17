@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Script_NetworkManager : MonoBehaviour
 {
+    public bool IsHost = true;
+
     public GameObject Cam1;
     public GameObject Cam2;
 
@@ -28,6 +30,6 @@ public class Script_NetworkManager : MonoBehaviour
 
     void Start()
     {
-        ActivatePlayer(true);
+        ActivatePlayer(IsHost);
     }
 }
