@@ -39,7 +39,8 @@ public class Script_Ball : MonoBehaviour
         
         if (collision.gameObject.tag == "Player")
         {
-            Direction = collision.contacts[0].normal;
+            Direction = Vector3.Reflect(Direction, collision.contacts[0].normal) + collision.gameObject.GetComponent<Rigidbody>().velocity/10;
+            Direction = Direction.normalized;
         }
         else
         {
