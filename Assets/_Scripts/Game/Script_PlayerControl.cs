@@ -7,7 +7,7 @@ public class Script_PlayerControl : MonoBehaviour
     bool IsHost = true;
 
     float MoveSpeed = 50000.0f;
-    float MaxSpeed = 8;
+    float MaxSpeed = 6;
     Rigidbody rigi;
 
     public void SetHost(bool host)
