@@ -7,19 +7,30 @@ using NetworkMessages;
 
 public class HTTPClient : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public User loginUser;
+
+    private static HTTPClient instance;
+    void Awake()
     {
-        StartCoroutine(LogIn("Bohan Player3", "125555555haha*"));
+        DontDestroyOnLoad(this);
+        if (instance == null) { instance = this; }
+        else { Destroy(this); }
     }
 
-    IEnumerator LogIn(string Username, string Password)
+    public void Login(string Username, string Password)
     {
+        StartCoroutine(LogInPost(Username, Password));
+    }
+
+    IEnumerator LogInPost(string Username, string Password)
+    {
+        loginUser.user_id = Username;
+        loginUser.password = Password;
         string jsonString = "{\"user_id\":\"" + Username + "\"," + "\"password\":\"" + Password + "\"}";
         byte[] myData = System.Text.Encoding.UTF8.GetBytes(jsonString);
 
         UnityWebRequest www = UnityWebRequest.Put("https://gawmvof8wi.execute-api.us-east-2.amazonaws.com/default/UserFunction", myData);
-        
+
         www.SetRequestHeader("Content-Type", "application/json");
         yield return www.SendWebRequest();
 
@@ -34,7 +45,20 @@ public class HTTPClient : MonoBehaviour
 
             string recMsg = Encoding.ASCII.GetString(results);
             User user = JsonUtility.FromJson<User>(recMsg);
-            Debug.Log("Username: " + user.user_id + " Password: " + user.password);
+            LoginMsg login = JsonUtility.FromJson<LoginMsg>(recMsg);
+            if (user.user_id != "")
+            {
+                loginUser = user;
+                GetComponent<Script_Login>().LogedIn();
+            }
+
+            if(login.code != "-1")
+            {
+                GetComponent<Script_Login>().LogInEvent(login);
+            }
+            
+            //Debug.Log("Username: " + user.user_id + " Password: " + user.password);
         }
     }
+
 }

@@ -30,11 +30,19 @@ namespace NetworkMessages
     }
 
     [System.Serializable]
-    public class User : NetworkHeader
+    public class User
     {
-        public string user_id;
-        public string password;
+        public string user_id = "";
+        public string password = "";
     }
+
+    [System.Serializable]
+    public class LoginMsg
+    {
+        public string code = "-1";
+        public string msg = "";
+    }
+
 
     [System.Serializable]
     public class RequestIDMsg : NetworkHeader
