@@ -19,4 +19,17 @@ public class Script_MainMenu : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void OnHostPressed()
+    {
+        GameObject.FindGameObjectWithTag("Login").GetComponent<Script_Login>().IsHost = true;
+        SceneManager.LoadScene(StartMap);
+    }
+
+    public void OnFindPressed()
+    {
+        GameObject.FindGameObjectWithTag("Login").GetComponent<Script_Login>().IsHost = false;
+        SceneManager.LoadScene(StartMap);
+
+    }
 }
