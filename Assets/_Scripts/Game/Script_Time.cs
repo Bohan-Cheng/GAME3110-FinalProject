@@ -12,21 +12,22 @@ public class Script_Time : MonoBehaviour
     void Start()
     {
         GameTime = 60;
+        StartCoroutine(CountDown());
     }
 
     // Update is called once per frame
     void Update()
     {
-        while(GameTime > 0)
-        {
-            StartCoroutine(CountDown());
-        }
-        ShowGameTime.text = GameTime.ToString();
+        
     }
 
     IEnumerator CountDown()
     {
-        yield return new WaitForSeconds(1.0f);
-        GameTime --;
+        while(GameTime > 0)
+        {
+            ShowGameTime.text = GameTime.ToString();
+            yield return new WaitForSeconds(1f);
+            GameTime--;
+        }
     }
 }
