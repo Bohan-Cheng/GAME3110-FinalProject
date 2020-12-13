@@ -7,11 +7,14 @@ using UnityEngine.SceneManagement;
 
 public class Script_Login : MonoBehaviour
 {
-    HTTPClient http;
+    public HTTPClient http;
 
     [SerializeField] string GameMapName;
     [SerializeField] Text UsernameText;
     [SerializeField] Text PasswordText;
+    [SerializeField] Text LoginMsgText;
+
+    public bool IsHost = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +39,8 @@ public class Script_Login : MonoBehaviour
     public void LogInEvent(LoginMsg login)
     {
         Debug.Log(login.msg);
+        LoginMsgText.text = login.msg;
+        Invoke("ClearMsg", 3.0f);
         switch (login.code)
         {
             // Failed to login
@@ -63,5 +68,10 @@ public class Script_Login : MonoBehaviour
     void FindMatch()
     {
         SceneManager.LoadScene(GameMapName);
+    }
+
+    void ClearMsg()
+    {
+        LoginMsgText.text = "";
     }
 }

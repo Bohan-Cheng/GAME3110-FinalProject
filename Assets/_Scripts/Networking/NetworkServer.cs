@@ -45,8 +45,8 @@ public class NetworkServer : MonoBehaviour
     }
 
     void OnConnect(NetworkConnection c){
-        SendIDToClient(c);
-        SendAllSpawnedPlayers(c);
+        //SendIDToClient(c);
+        //SendAllSpawnedPlayers(c);
         m_Connections.Add(c);
         Debug.Log("Accepted a connection.");
     }

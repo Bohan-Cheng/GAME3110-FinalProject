@@ -30,8 +30,6 @@ public class NetworkClient : MonoBehaviour
     {
         Debug.Log("Initialized.");
 
-        PlayerID = "Player " + System.DateTime.Now.ToString() + UnityEngine.Random.value.ToString();
-
         m_Driver = NetworkDriver.Create();
         m_Connection = default(NetworkConnection);
         var endpoint = NetworkEndPoint.Parse(serverIP,serverPort);
@@ -47,7 +45,9 @@ public class NetworkClient : MonoBehaviour
 
     void OnConnect(){
         Debug.Log("Connected to the server.");
-        SpawnPlayer();
+        PlayerID = GameObject.FindGameObjectWithTag("Login").GetComponent<Script_Login>().http.loginUser.user_id;
+        //SpawnPlayer();
+        playerGO = GetComponent<Script_NetworkManager>().Player1;
         InvokeRepeating("HandShake", 0.0f, 2.0f);
         InvokeRepeating("UpdateStats", 0.0f, 1.0f/30.0f);
     }
