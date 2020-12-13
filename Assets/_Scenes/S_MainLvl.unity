@@ -187,8 +187,9 @@ MonoBehaviour:
   serverIP: 127.0.0.1
   serverPort: 12345
   PlayerID: 
-  PlayerPrefab: {fileID: 0}
-  AllPlayersGO: []
+  AllPlayersGO:
+  - {fileID: 1772963037}
+  - {fileID: 1367444158}
 --- !u!1 &36520587
 GameObject:
   m_ObjectHideFlags: 0
@@ -998,8 +999,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 182076291}
-  - {fileID: 1367444159}
   - {fileID: 1772963038}
+  - {fileID: 1367444159}
   - {fileID: 615153633}
   m_Father: {fileID: 55187614}
   m_RootOrder: 0
@@ -2079,7 +2080,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1009609254}
   m_Layer: 0
-  m_Name: SoundManagement
+  m_Name: SoundMana
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2758,6 +2759,7 @@ GameObject:
   - component: {fileID: 1367444161}
   - component: {fileID: 1367444160}
   - component: {fileID: 1367444163}
+  - component: {fileID: 1367444164}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Player
@@ -2778,7 +2780,7 @@ Transform:
   m_Children:
   - {fileID: 2085633423}
   m_Father: {fileID: 521175158}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1367444160
 BoxCollider:
@@ -2858,6 +2860,21 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 124
   m_CollisionDetection: 2
+--- !u!114 &1367444164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367444158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d1d9f05b9e514342b18267dab363340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerID: 
+  localID: 
+  serverID: 
 --- !u!1 &1398701019
 GameObject:
   m_ObjectHideFlags: 0
@@ -4047,7 +4064,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &1701662388
 AudioListener:
   m_ObjectHideFlags: 0
@@ -4838,6 +4855,7 @@ GameObject:
   - component: {fileID: 1772963040}
   - component: {fileID: 1772963039}
   - component: {fileID: 1772963042}
+  - component: {fileID: 1772963043}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Player
@@ -4858,7 +4876,7 @@ Transform:
   m_Children:
   - {fileID: 1716672467}
   m_Father: {fileID: 521175158}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1772963039
 BoxCollider:
@@ -4938,6 +4956,21 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 124
   m_CollisionDetection: 2
+--- !u!114 &1772963043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772963037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d1d9f05b9e514342b18267dab363340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerID: 
+  localID: 
+  serverID: 
 --- !u!1 &1783665639
 GameObject:
   m_ObjectHideFlags: 0
