@@ -11,7 +11,7 @@ public class Script_Time : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameTime = 60;
+        GameTime = 59;
         StartCoroutine(CountDown());
     }
 
@@ -23,7 +23,7 @@ public class Script_Time : MonoBehaviour
 
     IEnumerator CountDown()
     {
-        while(GameTime > 0)
+        while(GameTime >= 0)
         {
             ShowGameTime.text = GameTime.ToString();
             yield return new WaitForSeconds(1f);
