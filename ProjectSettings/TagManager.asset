@@ -7,6 +7,7 @@ TagManager:
   - Ball
   - Hole
   - PlayerHole
+  - Login
   layers:
   - Default
   - TransparentFX
