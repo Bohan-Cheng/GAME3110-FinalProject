@@ -16,6 +16,11 @@ public class Script_Ball : MonoBehaviour
         Direction = new Vector3(Random.Range(-1.0f, 1.0f), 0, Random.Range(-1.0f, 1.0f));
     }
 
+    void Respawn()
+    {
+        transform.localPosition = new Vector3(0, 0, 0);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +37,23 @@ public class Script_Ball : MonoBehaviour
         rigi.velocity = Vector3.ClampMagnitude(rigi.velocity, MaxSpeed);
     }
 
+    private void OnTriggerExit(Collider trigger)
+    {
+        //ImpactPS.gameObject.SetActive(true);
+        //ImpactPS.Play();
+
+        if (trigger.gameObject.tag == "Hole")
+        {
+            Script_Score.Player1Score += 1;
+            Invoke("Respawn", 2.0f);
+        }
+        if (trigger.gameObject.tag == "PlayerHole")
+        {
+            Script_Score.Player2Score += 1;
+            Invoke("Respawn", 2.0f);
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         ImpactPS.gameObject.SetActive(true);
@@ -44,6 +66,16 @@ public class Script_Ball : MonoBehaviour
         }
         else
         {
+            //if (collision.gameObject.tag == "Hole")
+            //{
+            //    Script_Score.Player1Score += 1;
+            //    RandomDirection();
+            //}
+            //if(collision.gameObject.tag == "PlayerHole")
+            //{
+            //    Script_Score.Player2Score += 1;
+            //    RandomDirection();
+            //}
             Direction = Vector3.Reflect(Direction, collision.contacts[0].normal);
         }
             rigi.velocity = Vector3.zero;
