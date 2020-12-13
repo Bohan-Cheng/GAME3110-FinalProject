@@ -8,6 +8,7 @@ public class Script_Ball : MonoBehaviour
 
     [SerializeField] float BallSpeed = 15.0f;
     [SerializeField] float MaxSpeed = 15.0f;
+    [SerializeField] bool CanMove = true;
     Vector3 Direction = Vector3.zero;
     Rigidbody rigi;
 
@@ -18,9 +19,17 @@ public class Script_Ball : MonoBehaviour
 
     void Respawn()
     {
-        transform.localPosition = new Vector3(0, 0, 0);
+        gameObject.SetActive(true);
+        CanMove = false;
+        Invoke("Movement", 1.0f);
+        transform.localPosition = new Vector3(0, -0.25f, 0);
+        RandomDirection();
     }
 
+    void Movement()
+    {
+        CanMove = true;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -31,13 +40,21 @@ public class Script_Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rigi.AddForce(Direction * BallSpeed * Time.deltaTime);
+        if(CanMove)
+        {
+            rigi.AddForce(Direction * BallSpeed * Time.deltaTime);
 
-        // Limit max speed of the player
-        rigi.velocity = Vector3.ClampMagnitude(rigi.velocity, MaxSpeed);
+            // Limit max speed of the player
+            rigi.velocity = Vector3.ClampMagnitude(rigi.velocity, MaxSpeed);
+        }
+
+        else
+        {
+            rigi.velocity = Vector3.zero;
+        }
     }
 
-    private void OnTriggerExit(Collider trigger)
+    private void OnTriggerEnter(Collider trigger)
     {
         //ImpactPS.gameObject.SetActive(true);
         //ImpactPS.Play();
@@ -46,11 +63,13 @@ public class Script_Ball : MonoBehaviour
         {
             Script_Score.Player1Score += 1;
             Invoke("Respawn", 2.0f);
+            gameObject.SetActive(false);
         }
         if (trigger.gameObject.tag == "PlayerHole")
         {
             Script_Score.Player2Score += 1;
             Invoke("Respawn", 2.0f);
+            gameObject.SetActive(false);
         }
     }
 
