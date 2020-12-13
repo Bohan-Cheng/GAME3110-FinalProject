@@ -12,6 +12,9 @@ public class Script_Ball : MonoBehaviour
     [SerializeField] bool CanMove = true;
     [SerializeField] Text Player1Goal;
     [SerializeField] Text Player2Goal;
+    [SerializeField] AudioSource CollisionSound;
+    [SerializeField] AudioSource CollisionPlayerSound;
+    [SerializeField] AudioSource HappySound;
     Vector3 Direction = Vector3.zero;
     Rigidbody rigi;
 
@@ -101,6 +104,8 @@ public class Script_Ball : MonoBehaviour
             Invoke("Respawn", 2.0f);
             gameObject.SetActive(false);
         }
+
+        HappySound.Play();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -112,9 +117,14 @@ public class Script_Ball : MonoBehaviour
         {
             Direction = Vector3.Reflect(Direction, collision.contacts[0].normal) + collision.gameObject.GetComponent<Rigidbody>().velocity/10;
             Direction = Direction.normalized;
+            CollisionPlayerSound.Play();
+            
         }
         else
         {
+            Direction = Vector3.Reflect(Direction, collision.contacts[0].normal);
+            CollisionSound.Play();
+
             //if (collision.gameObject.tag == "Hole")
             //{
             //    Script_Score.Player1Score += 1;
@@ -125,8 +135,8 @@ public class Script_Ball : MonoBehaviour
             //    Script_Score.Player2Score += 1;
             //    RandomDirection();
             //}
-            Direction = Vector3.Reflect(Direction, collision.contacts[0].normal);
         }
-            rigi.velocity = Vector3.zero;
+        
+        rigi.velocity = Vector3.zero;
     }
 }
