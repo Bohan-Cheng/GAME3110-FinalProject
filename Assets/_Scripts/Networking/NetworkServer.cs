@@ -16,6 +16,7 @@ public class NetworkServer : MonoBehaviour
     private NativeList<NetworkConnection> m_Connections;
 
     List<PlayerSpawnMsg> AllSpawnMsg = new List<PlayerSpawnMsg>();
+    List<HostGameMsg> AllGames = new List<HostGameMsg>();
 
     void Start ()
     {
@@ -45,8 +46,8 @@ public class NetworkServer : MonoBehaviour
     }
 
     void OnConnect(NetworkConnection c){
-        //SendIDToClient(c);
-        //SendAllSpawnedPlayers(c);
+        SendIDToClient(c);
+        SendAllSpawnedPlayers(c);
         m_Connections.Add(c);
         Debug.Log("Accepted a connection.");
     }
@@ -130,6 +131,18 @@ public class NetworkServer : MonoBehaviour
                 Debug.Log(psMsg.ID + " has joined the server!");
                 break;
 
+            case Commands.PLAYER_HOST:
+                HostGameMsg hostMsg = JsonUtility.FromJson<HostGameMsg>(recMsg);
+                AllGames.Add(hostMsg);
+                Debug.Log(hostMsg.Game.ID + " is started!");
+                break;
+
+            case Commands.PLAYER_JOIN:
+                JoinGameMsg joinMsg = JsonUtility.FromJson<JoinGameMsg>(recMsg);
+                FindGameAndJoin(joinMsg.Challenger);
+                Debug.Log(joinMsg.Challenger.user_id + " is finding a match!");
+                break;
+
             case Commands.UPDATE_STATS:
                 UpdateStatsMsg usMsg = JsonUtility.FromJson<UpdateStatsMsg>(recMsg);
                 UpdatePlayerStats(usMsg);
@@ -146,6 +159,25 @@ public class NetworkServer : MonoBehaviour
                 Debug.Log("SERVER ERROR: Unrecognized message received!");
             break;
         }
+    }
+
+    void FindGameAndJoin(User user)
+    {
+        foreach (HostGameMsg h in AllGames)
+        {
+            if(h.Game.IsAvailable)
+            {
+                h.Game.Chanllenger = user;
+                h.Game.IsAvailable = false;
+                StartGame(h.Game);
+                break;
+            }
+        }
+    }
+
+    void StartGame(Match game)
+    {
+
     }
 
     PlayerSpawnMsg FindPlayerSpawnMsg(string ID)

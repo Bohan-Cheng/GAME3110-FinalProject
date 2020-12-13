@@ -12,7 +12,9 @@ namespace NetworkMessages
         PLAYER_INPUT,
         PLAYER_SPAWN,
         REQUEST_ID,
-        UPDATE_STATS
+        UPDATE_STATS,
+        PLAYER_HOST,
+        PLAYER_JOIN
     }
 
     [System.Serializable]
@@ -37,6 +39,15 @@ namespace NetworkMessages
     }
 
     [System.Serializable]
+    public class Match
+    {
+        public string ID;
+        public User Host;
+        public User Chanllenger;
+        public bool IsAvailable;
+    }
+
+    [System.Serializable]
     public class LoginMsg
     {
         public string code = "-1";
@@ -55,11 +66,30 @@ namespace NetworkMessages
     }
 
     [System.Serializable]
+    public class HostGameMsg : NetworkHeader
+    {
+        public Match Game;
+        public HostGameMsg()
+        {      // Constructor
+            cmd = Commands.PLAYER_HOST;
+        }
+    }
+
+    [System.Serializable]
+    public class JoinGameMsg : NetworkHeader
+    {
+        public User Challenger;
+        public JoinGameMsg()
+        {      // Constructor
+            cmd = Commands.PLAYER_JOIN;
+        }
+    }
+
+    [System.Serializable]
     public class UpdateStatsMsg : NetworkHeader
     {
         public string ID;
         public Vector3 Position;
-        public Quaternion Rotation;
         public UpdateStatsMsg()
         {      // Constructor
             cmd = Commands.UPDATE_STATS;
@@ -87,7 +117,6 @@ namespace NetworkMessages
 
     [System.Serializable]
     public class PlayerSpawnMsg:NetworkHeader{
-        public Vector3 Position;
         public string ID;
         public PlayerSpawnMsg(){      // Constructor
             cmd = Commands.PLAYER_SPAWN;

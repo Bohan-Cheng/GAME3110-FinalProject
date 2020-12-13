@@ -187,8 +187,9 @@ MonoBehaviour:
   serverIP: 127.0.0.1
   serverPort: 12345
   PlayerID: 
-  PlayerPrefab: {fileID: 0}
-  AllPlayersGO: []
+  AllPlayersGO:
+  - {fileID: 1772963037}
+  - {fileID: 1367444158}
 --- !u!1 &55187613
 GameObject:
   m_ObjectHideFlags: 0
@@ -2503,6 +2504,7 @@ GameObject:
   - component: {fileID: 1367444161}
   - component: {fileID: 1367444160}
   - component: {fileID: 1367444163}
+  - component: {fileID: 1367444164}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Player
@@ -2603,6 +2605,21 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 124
   m_CollisionDetection: 2
+--- !u!114 &1367444164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367444158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d1d9f05b9e514342b18267dab363340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerID: 
+  localID: 
+  serverID: 
 --- !u!1 &1398701019
 GameObject:
   m_ObjectHideFlags: 0
@@ -4455,6 +4472,7 @@ GameObject:
   - component: {fileID: 1772963040}
   - component: {fileID: 1772963039}
   - component: {fileID: 1772963042}
+  - component: {fileID: 1772963043}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Player
@@ -4555,6 +4573,21 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 124
   m_CollisionDetection: 2
+--- !u!114 &1772963043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772963037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d1d9f05b9e514342b18267dab363340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerID: 
+  localID: 
+  serverID: 
 --- !u!1 &1783665639
 GameObject:
   m_ObjectHideFlags: 0

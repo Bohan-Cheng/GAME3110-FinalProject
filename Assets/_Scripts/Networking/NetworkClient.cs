@@ -17,10 +17,10 @@ public class NetworkClient : MonoBehaviour
 
     public string PlayerID;
 
-    public GameObject PlayerPrefab;
 
     GameObject playerGO;
     NetInfo playerInfo;
+    Script_Login loginInfo;
 
     [SerializeField]
     List<GameObject> AllPlayersGO = new List<GameObject>();
@@ -47,39 +47,80 @@ public class NetworkClient : MonoBehaviour
         Debug.Log("Connected to the server.");
         PlayerID = GameObject.FindGameObjectWithTag("Login").GetComponent<Script_Login>().http.loginUser.user_id;
         //SpawnPlayer();
-        playerGO = GetComponent<Script_NetworkManager>().Player1;
+        StartMatch();
         InvokeRepeating("HandShake", 0.0f, 2.0f);
         InvokeRepeating("UpdateStats", 0.0f, 1.0f/30.0f);
     }
 
-    void SpawnPlayer()
+    void StartMatch()
     {
-        Debug.Log("Player spawned.");
+        loginInfo = GameObject.FindGameObjectWithTag("Login").GetComponent<Script_Login>();
 
-        Vector3 pos = new Vector3(UnityEngine.Random.Range(-2.0f, 2.0f), 0.0f, 0.0f);
 
-        playerGO = Instantiate(PlayerPrefab, pos, new Quaternion());
+        if (loginInfo.IsHost)
+        {
+            playerGO = GetComponent<Script_NetworkManager>().Player1;
+            Match match = new Match();
+            match.Host = loginInfo.http.loginUser;
+            match.ID = loginInfo.http.loginUser.user_id + "'s match";
+            match.IsAvailable = true;
+
+            HostGameMsg m = new HostGameMsg();
+            m.Game = match;
+            GetComponent<NetworkClient>().SendToServer(JsonUtility.ToJson(m));
+        }
+        else
+        {
+            playerGO = GetComponent<Script_NetworkManager>().Player2;
+            Debug.Log("Get Server stuff here!");
+        }
+
         playerInfo = playerGO.GetComponent<NetInfo>();
         playerInfo.localID = m_Connection.InternalId.ToString();
         playerInfo.playerID = PlayerID;
-        playerInfo.ActivateCam();
-        //playerGO.AddComponent<PlayerControl>();
-        AllPlayersGO.Add(playerGO);
 
-        //// Example to send a handshake message:
-        PlayerSpawnMsg m = new PlayerSpawnMsg();
-        m.Position = pos;
-        m.ID = PlayerID;
-        SendToServer(JsonUtility.ToJson(m));
+        PlayerSpawnMsg sm = new PlayerSpawnMsg();
+        sm.ID = PlayerID;
+        SendToServer(JsonUtility.ToJson(sm));
+    }
+
+    void SpawnPlayer()
+    {
+        //Debug.Log("Player spawned.");
+
+        //Vector3 pos = new Vector3(UnityEngine.Random.Range(-2.0f, 2.0f), 0.0f, 0.0f);
+
+        //playerGO = Instantiate(PlayerPrefab, pos, new Quaternion());
+        //playerInfo = playerGO.GetComponent<NetInfo>();
+        //playerInfo.localID = m_Connection.InternalId.ToString();
+        //playerInfo.playerID = PlayerID;
+        //playerInfo.ActivateCam();
+        ////playerGO.AddComponent<PlayerControl>();
+        //AllPlayersGO.Add(playerGO);
+
+        ////// Example to send a handshake message:
+
     }
 
     void SpawnOtherPlayer(PlayerSpawnMsg msg)
     {
-        if(msg.ID != PlayerID)
+        //if(msg.ID != PlayerID)
+        //{
+        //    GameObject otherPlayerGO = Instantiate(PlayerPrefab, msg.Position, new Quaternion());
+        //    otherPlayerGO.GetComponent<NetInfo>().playerID = msg.ID;
+        //    AllPlayersGO.Add(otherPlayerGO);
+        //}
+
+        if (msg.ID != PlayerID)
         {
-            GameObject otherPlayerGO = Instantiate(PlayerPrefab, msg.Position, new Quaternion());
-            otherPlayerGO.GetComponent<NetInfo>().playerID = msg.ID;
-            AllPlayersGO.Add(otherPlayerGO);
+            if (loginInfo.IsHost)
+            {
+                AllPlayersGO[1].GetComponent<NetInfo>().playerID = msg.ID;
+            }
+            else
+            {
+                AllPlayersGO[0].GetComponent<NetInfo>().playerID = msg.ID;
+            }
         }
     }
 
@@ -91,7 +132,6 @@ public class NetworkClient : MonoBehaviour
             if(Obj)
             {
                 Obj.transform.position = msg.Position;
-                Obj.transform.rotation = msg.Rotation;
             }
         }
     }
@@ -198,7 +238,6 @@ public class NetworkClient : MonoBehaviour
         UpdateStatsMsg m = new UpdateStatsMsg();
         m.ID = PlayerID;
         m.Position = playerGO.transform.position;
-        m.Rotation = playerGO.transform.rotation;
         SendToServer(JsonUtility.ToJson(m));
     }
 

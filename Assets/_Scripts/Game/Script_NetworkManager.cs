@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NetworkMessages;
 
 public class Script_NetworkManager : MonoBehaviour
 {
@@ -13,7 +14,6 @@ public class Script_NetworkManager : MonoBehaviour
     public int CurentPlayers = 0;
 
     private Script_Login loginInfo;
-
 
     public void ActivatePlayer(bool host)
     {
