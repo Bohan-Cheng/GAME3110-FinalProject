@@ -13,6 +13,9 @@ public class Script_Login : MonoBehaviour
     [SerializeField] Text UsernameText;
     [SerializeField] Text PasswordText;
     [SerializeField] Text LoginMsgText;
+    [SerializeField] Text IPText;
+
+    public string serverIP;
 
     public bool IsHost = false;
     // Start is called before the first frame update
@@ -21,9 +24,9 @@ public class Script_Login : MonoBehaviour
         http = GetComponent<HTTPClient>();
     }
 
-
     public void LoginButton()
     {
+        serverIP = IPText.text;
         http.Login(UsernameText.text, PasswordText.text);
     }
 

@@ -90,11 +90,23 @@ namespace NetworkMessages
     {
         public string ID;
         public Vector3 Position;
+        public Vector3 BallPosition;
         public UpdateStatsMsg()
         {      // Constructor
             cmd = Commands.UPDATE_STATS;
         }
     }
+
+    //[System.Serializable]
+    //public class UpdateBallMsg : NetworkHeader
+    //{
+    //    public string ID;
+    //    public Vector3 Position;
+    //    public UpdateStatsMsg()
+    //    {      // Constructor
+    //        cmd = Commands.UPDATE_STATS;
+    //    }
+    //}
 
     [System.Serializable]
     public class PlayerUpdateMsg:NetworkHeader{

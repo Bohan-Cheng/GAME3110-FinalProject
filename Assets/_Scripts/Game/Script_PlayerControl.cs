@@ -6,8 +6,8 @@ public class Script_PlayerControl : MonoBehaviour
 {
     bool IsHost = true;
 
-    float MoveSpeed = 50000.0f;
-    float MaxSpeed = 6;
+    float MoveSpeed = 150.0f;
+    float MaxSpeed = 15;
     Rigidbody rigi;
 
     public void SetHost(bool host)
@@ -33,7 +33,7 @@ public class Script_PlayerControl : MonoBehaviour
         // Move the player
         float moveHorizontal = Input.GetAxis("Horizontal");
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, 0.0f);
-        rigi.AddForce(movement * MoveSpeed * Time.deltaTime);
+        rigi.AddForce(movement * MoveSpeed);
 
         // Limit max speed of the player
         rigi.velocity = Vector3.ClampMagnitude(rigi.velocity, MaxSpeed);

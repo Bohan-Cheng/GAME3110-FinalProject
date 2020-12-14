@@ -6,28 +6,28 @@ using TMPro;
 
 public class Script_Time : MonoBehaviour
 {
-    public int GameTime;
+    public int Min;
+    private int Sec = 59;
     public TextMeshProUGUI ShowGameTime;
     // Start is called before the first frame update
     void Start()
     {
-        GameTime = 59;
         StartCoroutine(CountDown());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     IEnumerator CountDown()
     {
-        while(GameTime >= 0)
+        while(Sec > 0 && Min > 0)
         {
-            ShowGameTime.text = GameTime.ToString();
+            Sec--;
+            if(Sec <= 0)
+            {
+                Min--;
+                Sec = 59;
+            }
+            string timeText = Min.ToString() + " : " + Sec.ToString();
+            ShowGameTime.text = timeText;
             yield return new WaitForSeconds(1f);
-            GameTime--;
         }
     }
 }

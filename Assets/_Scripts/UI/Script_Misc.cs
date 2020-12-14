@@ -9,9 +9,10 @@ public class Script_Misc : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(welcomeNammeText)
+        Script_Login login = GameObject.FindGameObjectWithTag("Login").GetComponent<Script_Login>();
+        if (welcomeNammeText)
         {
-            welcomeNammeText.text = GameObject.FindGameObjectWithTag("Login").GetComponent<Script_Login>().http.loginUser.user_id;
+            welcomeNammeText.text = login.http.loginUser.user_id;
         }
     }
 

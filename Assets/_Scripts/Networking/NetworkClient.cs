@@ -7,6 +7,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 
 public class NetworkClient : MonoBehaviour
 {
@@ -25,10 +26,20 @@ public class NetworkClient : MonoBehaviour
     [SerializeField]
     List<GameObject> AllPlayersGO = new List<GameObject>();
 
-    
+    [SerializeField]
+    GameObject Ball;
+    [SerializeField] TextMeshProUGUI player1Name;
+    [SerializeField] TextMeshProUGUI player2Name;
+
+
     void Start ()
     {
         Debug.Log("Initialized.");
+        loginInfo = GameObject.FindGameObjectWithTag("Login").GetComponent<Script_Login>();
+        if(loginInfo.serverIP.Length > 5)
+        {
+            serverIP = loginInfo.serverIP;
+        }
 
         m_Driver = NetworkDriver.Create();
         m_Connection = default(NetworkConnection);
@@ -54,11 +65,10 @@ public class NetworkClient : MonoBehaviour
 
     void StartMatch()
     {
-        loginInfo = GameObject.FindGameObjectWithTag("Login").GetComponent<Script_Login>();
-
-
         if (loginInfo.IsHost)
         {
+            player1Name.text = PlayerID;
+
             playerGO = GetComponent<Script_NetworkManager>().Player1;
             Match match = new Match();
             match.Host = loginInfo.http.loginUser;
@@ -71,6 +81,8 @@ public class NetworkClient : MonoBehaviour
         }
         else
         {
+            player2Name.text = PlayerID;
+
             playerGO = GetComponent<Script_NetworkManager>().Player2;
             Debug.Log("Get Server stuff here!");
         }
@@ -116,10 +128,12 @@ public class NetworkClient : MonoBehaviour
             if (loginInfo.IsHost)
             {
                 AllPlayersGO[1].GetComponent<NetInfo>().playerID = msg.ID;
+                player2Name.text = msg.ID;
             }
             else
             {
                 AllPlayersGO[0].GetComponent<NetInfo>().playerID = msg.ID;
+                player1Name.text = msg.ID;
             }
         }
     }
@@ -128,6 +142,10 @@ public class NetworkClient : MonoBehaviour
     {
         if (msg.ID != PlayerID)
         {
+            if(!loginInfo.IsHost)
+            {
+                Ball.transform.position = msg.BallPosition;
+            }
             GameObject Obj = FindPlayerObj(msg.ID);
             if(Obj)
             {
@@ -238,6 +256,10 @@ public class NetworkClient : MonoBehaviour
         UpdateStatsMsg m = new UpdateStatsMsg();
         m.ID = PlayerID;
         m.Position = playerGO.transform.position;
+        if (loginInfo.IsHost)
+        {
+            m.BallPosition = Ball.transform.position;
+        }
         SendToServer(JsonUtility.ToJson(m));
     }
 

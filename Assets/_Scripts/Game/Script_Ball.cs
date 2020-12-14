@@ -71,7 +71,7 @@ public class Script_Ball : MonoBehaviour
     {
         if(CanMove)
         {
-            rigi.AddForce(Direction * BallSpeed * Time.deltaTime);
+            rigi.AddForce(Direction * BallSpeed);
 
             // Limit max speed of the player
             rigi.velocity = Vector3.ClampMagnitude(rigi.velocity, MaxSpeed);
