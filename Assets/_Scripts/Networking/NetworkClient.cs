@@ -8,6 +8,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class NetworkClient : MonoBehaviour
 {
@@ -15,19 +16,22 @@ public class NetworkClient : MonoBehaviour
     public NetworkConnection m_Connection;
     public string serverIP;
     public ushort serverPort;
+    private string PlayerID;
 
-    public string PlayerID;
+    [SerializeField] GameObject Cam1;
+    [SerializeField] GameObject Cam2;
+
+    public int CurentPlayers = 0;
+
+    private Script_Login loginInfo;
 
 
     GameObject playerGO;
     NetInfo playerInfo;
-    Script_Login loginInfo;
 
-    [SerializeField]
-    List<GameObject> AllPlayersGO = new List<GameObject>();
+    public List<GameObject> AllPlayersGO = new List<GameObject>();
 
-    [SerializeField]
-    GameObject Ball;
+    [SerializeField] GameObject Ball;
     [SerializeField] TextMeshProUGUI player1Name;
     [SerializeField] TextMeshProUGUI player2Name;
 
@@ -36,9 +40,17 @@ public class NetworkClient : MonoBehaviour
     {
         Debug.Log("Initialized.");
         loginInfo = GameObject.FindGameObjectWithTag("Login").GetComponent<Script_Login>();
+        
         if(loginInfo.serverIP.Length > 5)
         {
-            serverIP = loginInfo.serverIP;
+            if(loginInfo.serverIP == "localhost")
+            {
+                serverIP = "127.0.0.1";
+            }
+            else
+            {
+                serverIP = loginInfo.serverIP;
+            }
         }
 
         m_Driver = NetworkDriver.Create();
@@ -46,7 +58,7 @@ public class NetworkClient : MonoBehaviour
         var endpoint = NetworkEndPoint.Parse(serverIP,serverPort);
         m_Connection = m_Driver.Connect(endpoint);
     }
-    
+
     void SendToServer(string message){
         var writer = m_Driver.BeginSend(m_Connection);
         NativeArray<byte> bytes = new NativeArray<byte>(Encoding.ASCII.GetBytes(message),Allocator.Temp);
@@ -68,8 +80,10 @@ public class NetworkClient : MonoBehaviour
         if (loginInfo.IsHost)
         {
             player1Name.text = PlayerID;
+            Cam1.SetActive(true);
+            AllPlayersGO[0].AddComponent<Script_PlayerControl>().SetHost(true);
 
-            playerGO = GetComponent<Script_NetworkManager>().Player1;
+            playerGO = AllPlayersGO[0];
             Match match = new Match();
             match.Host = loginInfo.http.loginUser;
             match.ID = loginInfo.http.loginUser.user_id + "'s match";
@@ -82,58 +96,64 @@ public class NetworkClient : MonoBehaviour
         else
         {
             player2Name.text = PlayerID;
+            Cam2.SetActive(true);
+            AllPlayersGO[1].AddComponent<Script_PlayerControl>().SetHost(false);
 
-            playerGO = GetComponent<Script_NetworkManager>().Player2;
+            playerGO = AllPlayersGO[1];
             Debug.Log("Get Server stuff here!");
         }
 
+        SetPlayerInformation();
+    }
+
+    void SetPlayerInformation()
+    {
         playerInfo = playerGO.GetComponent<NetInfo>();
         playerInfo.localID = m_Connection.InternalId.ToString();
         playerInfo.playerID = PlayerID;
-
+        playerInfo.playerEmail = loginInfo.http.loginUser.email;
+        playerInfo.playerRank = loginInfo.http.loginUser.rank;
+        playerInfo.playerScore = loginInfo.http.loginUser.score;
         PlayerSpawnMsg sm = new PlayerSpawnMsg();
-        sm.ID = PlayerID;
+        User u = new User();
+        u.user_id = PlayerID;
+        u.email = loginInfo.http.loginUser.email;
+        u.rank = loginInfo.http.loginUser.rank;
+        u.score = loginInfo.http.loginUser.score;
+        sm.user = u;
         SendToServer(JsonUtility.ToJson(sm));
-    }
-
-    void SpawnPlayer()
-    {
-        //Debug.Log("Player spawned.");
-
-        //Vector3 pos = new Vector3(UnityEngine.Random.Range(-2.0f, 2.0f), 0.0f, 0.0f);
-
-        //playerGO = Instantiate(PlayerPrefab, pos, new Quaternion());
-        //playerInfo = playerGO.GetComponent<NetInfo>();
-        //playerInfo.localID = m_Connection.InternalId.ToString();
-        //playerInfo.playerID = PlayerID;
-        //playerInfo.ActivateCam();
-        ////playerGO.AddComponent<PlayerControl>();
-        //AllPlayersGO.Add(playerGO);
-
-        ////// Example to send a handshake message:
-
     }
 
     void SpawnOtherPlayer(PlayerSpawnMsg msg)
     {
-        //if(msg.ID != PlayerID)
-        //{
-        //    GameObject otherPlayerGO = Instantiate(PlayerPrefab, msg.Position, new Quaternion());
-        //    otherPlayerGO.GetComponent<NetInfo>().playerID = msg.ID;
-        //    AllPlayersGO.Add(otherPlayerGO);
-        //}
 
-        if (msg.ID != PlayerID)
+        if (msg.user.user_id != PlayerID)
         {
             if (loginInfo.IsHost)
             {
-                AllPlayersGO[1].GetComponent<NetInfo>().playerID = msg.ID;
-                player2Name.text = msg.ID;
+                if(msg.user.rank == playerInfo.playerRank)
+                {
+                    AllPlayersGO[1].GetComponent<NetInfo>().playerID = msg.user.user_id;
+                    AllPlayersGO[1].GetComponent<NetInfo>().playerEmail = msg.user.email;
+                    AllPlayersGO[1].GetComponent<NetInfo>().playerRank = msg.user.rank;
+                    AllPlayersGO[1].GetComponent<NetInfo>().playerScore = msg.user.score;
+                    player2Name.text = msg.user.user_id;
+                }
             }
             else
             {
-                AllPlayersGO[0].GetComponent<NetInfo>().playerID = msg.ID;
-                player1Name.text = msg.ID;
+                if (msg.user.rank == playerInfo.playerRank)
+                {
+                    AllPlayersGO[0].GetComponent<NetInfo>().playerID = msg.user.user_id;
+                    AllPlayersGO[0].GetComponent<NetInfo>().playerEmail = msg.user.email;
+                    AllPlayersGO[0].GetComponent<NetInfo>().playerRank = msg.user.rank;
+                    AllPlayersGO[0].GetComponent<NetInfo>().playerScore = msg.user.score;
+                    player1Name.text = msg.user.user_id;
+                }
+                else
+                {
+                    SceneManager.LoadScene("S_CreateFind");
+                }
             }
         }
     }
@@ -222,6 +242,7 @@ public class NetworkClient : MonoBehaviour
 
     void OnDisconnect(){
         Debug.Log("Client got disconnected from server");
+        DC();
         m_Connection = default(NetworkConnection);
     }
 
@@ -249,6 +270,7 @@ public class NetworkClient : MonoBehaviour
         PlayerDCMsg m = new PlayerDCMsg();
         m.PlayerID = PlayerID;
         SendToServer(JsonUtility.ToJson(m));
+        Invoke("ExitGame", 2.0f);
     }
 
     void UpdateStats()
@@ -265,6 +287,11 @@ public class NetworkClient : MonoBehaviour
 
     void Update()
     {
+        if(AllPlayersGO[0].GetComponent<NetInfo>().playerID.Length > 0 && AllPlayersGO[1].GetComponent<NetInfo>().playerID.Length > 0)
+        {
+            Ball.GetComponent<Script_Ball>().ShouldStart = true;
+        }
+
         m_Driver.ScheduleUpdate().Complete();
 
         if (!m_Connection.IsCreated)
@@ -297,7 +324,6 @@ public class NetworkClient : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Q))
         {
             DC();
-            Invoke("ExitGame", 2.0f);
         }
 
     }

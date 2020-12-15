@@ -13,6 +13,7 @@ public class Script_Login : MonoBehaviour
     [SerializeField] Text UsernameText;
     [SerializeField] Text PasswordText;
     [SerializeField] Text LoginMsgText;
+    [SerializeField] Text EmailText;
     [SerializeField] Text IPText;
 
     public string serverIP;
@@ -27,7 +28,7 @@ public class Script_Login : MonoBehaviour
     public void LoginButton()
     {
         serverIP = IPText.text;
-        http.Login(UsernameText.text, PasswordText.text);
+        http.Login(UsernameText.text, PasswordText.text, EmailText.text);
     }
 
     public void LogedIn()
@@ -58,6 +59,8 @@ public class Script_Login : MonoBehaviour
 
             // User created
             case "2":
+                http.loginUser.rank = "1";
+                http.loginUser.score = "0";
                 FindMatch();
                 break;
 
@@ -75,6 +78,9 @@ public class Script_Login : MonoBehaviour
 
     void ClearMsg()
     {
-        LoginMsgText.text = "";
+        if (LoginMsgText)
+        {
+            LoginMsgText.text = "";
+        }
     }
 }

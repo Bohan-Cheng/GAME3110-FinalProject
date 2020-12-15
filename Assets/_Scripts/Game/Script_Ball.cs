@@ -18,6 +18,11 @@ public class Script_Ball : MonoBehaviour
     Vector3 Direction = Vector3.zero;
     Rigidbody rigi;
 
+    Script_Login loginInfo;
+    [SerializeField] NetworkClient netClient;
+
+    public bool ShouldStart = false;
+
     void RandomDirection()
     {
         Direction = new Vector3(Random.Range(-1.0f, 1.0f), 0, Random.Range(-1.0f, 1.0f));
@@ -60,6 +65,7 @@ public class Script_Ball : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        loginInfo = GameObject.FindGameObjectWithTag("Login").GetComponent<Script_Login>();
         Player1Goal.gameObject.SetActive(false);
         Player2Goal.gameObject.SetActive(false);
         rigi = gameObject.GetComponent<Rigidbody>();
@@ -69,17 +75,20 @@ public class Script_Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(CanMove)
+        if (ShouldStart)
         {
-            rigi.AddForce(Direction * BallSpeed);
+            if (CanMove)
+            {
+                rigi.AddForce(Direction * BallSpeed);
 
-            // Limit max speed of the player
-            rigi.velocity = Vector3.ClampMagnitude(rigi.velocity, MaxSpeed);
-        }
+                // Limit max speed of the player
+                rigi.velocity = Vector3.ClampMagnitude(rigi.velocity, MaxSpeed);
+            }
 
-        else
-        {
-            rigi.velocity = Vector3.zero;
+            else
+            {
+                rigi.velocity = Vector3.zero;
+            }
         }
     }
 
@@ -95,6 +104,9 @@ public class Script_Ball : MonoBehaviour
             Invoke("HindPlayer1Goal", 2.0f);
             Invoke("Respawn", 2.0f);
             gameObject.SetActive(false);
+
+            int score = netClient.AllPlayersGO[0].GetComponent<NetInfo>().AddScore();
+            loginInfo.http.AddScore(netClient.AllPlayersGO[0].GetComponent<NetInfo>().playerID, score);
         }
         if (trigger.gameObject.tag == "PlayerHole")
         {
@@ -103,6 +115,9 @@ public class Script_Ball : MonoBehaviour
             Invoke("HindPlayer2Goal", 2.0f);
             Invoke("Respawn", 2.0f);
             gameObject.SetActive(false);
+
+            int score = netClient.AllPlayersGO[1].GetComponent<NetInfo>().AddScore();
+            loginInfo.http.AddScore(netClient.AllPlayersGO[1].GetComponent<NetInfo>().playerID, score);
         }
 
         HappySound.Play();
