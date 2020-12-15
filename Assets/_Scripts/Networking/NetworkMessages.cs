@@ -36,6 +36,9 @@ namespace NetworkMessages
     {
         public string user_id = "";
         public string password = "";
+        public string email = "";
+        public string rank = "";
+        public string score = "";
     }
 
     [System.Serializable]
@@ -129,7 +132,7 @@ namespace NetworkMessages
 
     [System.Serializable]
     public class PlayerSpawnMsg:NetworkHeader{
-        public string ID;
+        public User user;
         public PlayerSpawnMsg(){      // Constructor
             cmd = Commands.PLAYER_SPAWN;
         }

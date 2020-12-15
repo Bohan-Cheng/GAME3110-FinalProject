@@ -17,16 +17,48 @@ public class HTTPClient : MonoBehaviour
         else { Destroy(this); }
     }
 
-    public void Login(string Username, string Password)
+    public void Login(string Username, string Password, string Email)
     {
-        StartCoroutine(LogInPost(Username, Password));
+        StartCoroutine(LogInPost(Username, Password, Email));
     }
 
-    IEnumerator LogInPost(string Username, string Password)
+    public void AddScore(string Username, int score)
+    {
+        StartCoroutine(DoAddScore(Username, score));
+    }
+
+    IEnumerator DoAddScore(string Username, int score)
+    {
+        loginUser.user_id = Username;
+        string jsonString = "{\"user_id\":\"" + Username + "\"," + "\"score\":\"" + score.ToString() + "\"}";
+        byte[] myData = System.Text.Encoding.UTF8.GetBytes(jsonString);
+
+        UnityWebRequest www = UnityWebRequest.Put("https://aja8khi382.execute-api.us-east-2.amazonaws.com/default/UserFunction2", myData);
+
+        www.SetRequestHeader("Content-Type", "application/json");
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            // Or retrieve results as binary data
+            byte[] results = www.downloadHandler.data;
+
+            string recMsg = Encoding.ASCII.GetString(results);
+
+            Debug.Log(recMsg);
+        }
+    }
+
+    IEnumerator LogInPost(string Username, string Password, string Email)
     {
         loginUser.user_id = Username;
         loginUser.password = Password;
-        string jsonString = "{\"user_id\":\"" + Username + "\"," + "\"password\":\"" + Password + "\"}";
+        loginUser.email = Email;
+        string jsonString = "{\"user_id\":\"" + Username + "\"," + "\"password\":\"" + Password + "\"," + "\"email\":\"" + Email + "\"," + "\"rank\":\"" + "1" + "\"," + "\"score\":\"" + "0" + "\"}";
         byte[] myData = System.Text.Encoding.UTF8.GetBytes(jsonString);
 
         UnityWebRequest www = UnityWebRequest.Put("https://gawmvof8wi.execute-api.us-east-2.amazonaws.com/default/UserFunction", myData);

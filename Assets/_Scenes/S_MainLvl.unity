@@ -132,7 +132,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 27420221}
-  - component: {fileID: 27420222}
   - component: {fileID: 27420223}
   m_Layer: 0
   m_Name: NetworkMana
@@ -155,23 +154,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &27420222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 27420220}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c925d733e96ff24a9801badb9525aa7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Cam1: {fileID: 1701662387}
-  Cam2: {fileID: 240566174}
-  Player1: {fileID: 1772963037}
-  Player2: {fileID: 1367444158}
-  CurentPlayers: 0
 --- !u!114 &27420223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,9 +166,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6618ccae9ea817b48bb1fb057368519b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverIP: 18.188.149.129
+  serverIP: 18.224.199.118
   serverPort: 12345
-  PlayerID: 
+  Cam1: {fileID: 1701662387}
+  Cam2: {fileID: 240566174}
+  CurentPlayers: 0
   AllPlayersGO:
   - {fileID: 1772963037}
   - {fileID: 1367444158}
@@ -2762,6 +2746,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerID: 
+  playerEmail: 
+  playerRank: 
+  playerScore: 
   localID: 
   serverID: 
 --- !u!1 &1398701019
@@ -4607,6 +4594,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerID: 
+  playerEmail: 
+  playerRank: 
+  playerScore: 
   localID: 
   serverID: 
 --- !u!1 &1783665639
@@ -5105,6 +5095,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   welcomeNammeText: {fileID: 0}
+  profileText: {fileID: 0}
+  emailText: {fileID: 0}
 --- !u!4 &2007936786
 Transform:
   m_ObjectHideFlags: 0
@@ -5497,6 +5489,14 @@ PrefabInstance:
     - target: {fileID: 8935255781013729718, guid: 5b818c7a2777d2b4e8c8d2233d0a5e9f, type: 3}
       propertyPath: MaxSpeed
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8935255781013729718, guid: 5b818c7a2777d2b4e8c8d2233d0a5e9f, type: 3}
+      propertyPath: netClient
+      value: 
+      objectReference: {fileID: 27420223}
+    - target: {fileID: 8935255781013729718, guid: 5b818c7a2777d2b4e8c8d2233d0a5e9f, type: 3}
+      propertyPath: ShouldStart
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b818c7a2777d2b4e8c8d2233d0a5e9f, type: 3}

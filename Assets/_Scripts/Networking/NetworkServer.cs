@@ -128,7 +128,7 @@ public class NetworkServer : MonoBehaviour
                 PlayerSpawnMsg psMsg = JsonUtility.FromJson<PlayerSpawnMsg>(recMsg);
                 AllSpawnMsg.Add(psMsg);
                 SpawnNewPlayer(psMsg);
-                Debug.Log(psMsg.ID + " has joined the server!");
+                Debug.Log(psMsg.user.user_id + " has joined the server!");
                 break;
 
             case Commands.PLAYER_HOST:
@@ -184,7 +184,7 @@ public class NetworkServer : MonoBehaviour
     {
         foreach (PlayerSpawnMsg msg in AllSpawnMsg)
         {
-            if(msg.ID == ID)
+            if(msg.user.user_id == ID)
             {
                 return msg;
             }
@@ -194,6 +194,8 @@ public class NetworkServer : MonoBehaviour
 
     void OnDisconnect(int i){
         Debug.Log("Client disconnected from server");
+        AllSpawnMsg.Clear();
+        AllGames.Clear();
         m_Connections[i] = default(NetworkConnection);
     }
 
